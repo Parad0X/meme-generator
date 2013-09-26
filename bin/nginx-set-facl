@@ -1,0 +1,78 @@
+#!/bin/bash
+## nginx-set-acl
+##
+## Grant ACL permissions on one or more files or directories to the nginx user
+
+## -----------------------------------------------------------------------------
+
+## Locate the primary nginx configuration file (e.g. /etc/nginx/nginx.conf)
+##
+## Attempt to locate the file with the following order of precedence:
+## 1. Use `nginx -V` to parse the compiled value of --conf-path
+## 2. Use the `locate` database to find 'nginx.conf'
+##    Prompt user to select a location if multiple files are found
+## 3. Prompt user to enter a path if `nginx -V` and `locate` fail
+nginx_conf() {
+    local CONF=''
+    if [[ -f $(command -v nginx 2>&1) ]]; then
+        CONF=$(nginx -V 2>&1 | grep -Po '\--conf-path=[^\s]*' | cut -d'=' -f2)
+    fi
+    if [[ -z "$CONF" ]] && [[ -f $(command -v locate 2>&1) ]]; then
+        local MATCHES=$(locate nginx.conf | grep nginx.conf$ | wc -l)
+        if [[ $MATCHES -eq 1 ]]; then
+            CONF=$(locate nginx.conf | grep nginx.conf$)
+        elif [[ $MATCHES -gt 1 ]]; then
+            PS3="Select Nginx configuration file: "
+            select CONF in $(locate nginx.conf | grep nginx.conf$); do
+                if [[ -n $CONF ]]; then
+                    break
+                fi
+            done
+        fi
+    fi
+    until [[ -f "$CONF" ]]; do
+        read -p "Enter Nginx configuration path: " CONF
+    done
+    echo $CONF
+}
+
+## Identify the nginx system user (e.g. www-data)
+##
+## Attempt to parse the user from the primary nginx configuration file.
+## Prompt user for input if no value is found.
+nginx_user() {
+    local USER=''
+    local CONF=$(nginx_conf)
+    if [[ -f "$CONF" ]]; then
+        USER=$(grep ^user "$CONF" | sed -ne 's/user\s\+\(.*\)\;\s*$/\1/p')
+    fi
+    until [[ -n "$USER" ]]; do
+        read -p "Enter Nginx user: " USER
+    done
+    echo $USER
+}
+
+## Grant recursive ACL permissions on a given file or directory
+##
+## Attempt to use setfacl (acl package on most *nix systems).
+## Fall back to chmod +a (OS X and other BSDs).
+set_acl() {
+    if [[ -z $(id "$1" 2>/dev/null) ]]; then
+        echo "No such user '$1'" >&2
+        exit 1
+    fi
+    if [[ -f $(command -v setfacl 2>&1) ]]; then
+        setfacl -Rm u:$1:rwx,d:u:$1:rwx "${@:2}"
+    else
+        mode='allow delete,write,append,file_inherit,directory_inherit'
+        chmod +a "$1 $mode" "${@:2}"
+    fi
+}
+
+## -----------------------------------------------------------------------------
+
+if [[ -z "$1" ]]; then
+    echo "Usage: $(basename $0) [PATH] ..." >&2
+    exit 1
+fi
+set_acl `whoami` "$@" && set_acl "$(nginx_user)" "$@"

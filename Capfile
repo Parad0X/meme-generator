@@ -39,6 +39,14 @@ namespace :php_fpm do
 	end
 end
 
+namespace :deploy do
+    task :fix_permissions do
+        run "cd #{latest_release}; ./bin/nginx-set-facl app/logs"
+        run "cd #{latest_release}; ./bin/nginx-set-facl app/cache"
+    end
+end
+
+after "deploy:update", "deploy:fix_permissions"
 after "deploy:update", "composer:install"
 after "deploy:update", "php_fpm:restart"
 after "deploy:update", "deploy:cleanup"

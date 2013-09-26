@@ -7,7 +7,7 @@ $app
     ->view(new \Slim\Views\Twig())
     ->parserOptions = [
         'charset'          => 'utf-8',
-        'cache'            => CACHE_DIR . '/app/cache/twig',
+        'cache'            => CACHE_DIR . '/twig',
         'auto_reload'      => true,
         'strict_variables' => false,
         'autoescape'       => true
