@@ -21,6 +21,6 @@
         "slim/views":  "0.*",
         "slim/extras": "2.*",
         "twig/twig":   "1.*",
-        "doctrine/mongodb-odm": "1.0.0-BETA9"
+        "doctrine/mongodb-odm": "dev-master"
     }
 }
