@@ -1,0 +1,26 @@
+{
+    "name": "pdx/meme-generator",
+    "description": "Meme generator API",
+    "homepage": "http://memes.parad0x.me",
+    "authors": [
+        {
+            "name": "Andrei Shevtsov",
+            "email": "andrei@parad0x.me",
+            "homepage": "http://www.parad0x.me/"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "mg\\": "src/",
+            "": "app/models"
+        }
+    },
+    "require": {
+        "php":         ">=5.4.0",
+        "slim/slim":   "2.*",
+        "slim/views":  "0.*",
+        "slim/extras": "2.*",
+        "twig/twig":   "1.*",
+        "doctrine/mongodb-odm": "1.0.0-BETA9"
+    }
+}
