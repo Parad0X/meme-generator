@@ -41,12 +41,16 @@ $app = new \Slim\Slim([
 // DI
 $app
     ->container
-    ->singleton('dm', function() {
+    ->singleton('dm', function() use ($app) {
         // Load annotations
         require APP_ROOT . '/vendor/doctrine/mongodb-odm/lib/Doctrine/ODM/MongoDB/Mapping/Annotations/DoctrineAnnotations.php';
 
         // Connection
-        $conn = new Doctrine\MongoDB\Connection('192.168.33.10');
+        if ($app->mode == 'production') {
+            $conn = new Doctrine\MongoDB\Connection('127.0.0.1');
+        } else {
+            $conn = new Doctrine\MongoDB\Connection('192.168.33.10');
+        }
 
         // Configuration
         $config = new Doctrine\ODM\MongoDB\Configuration();
