@@ -10,33 +10,23 @@ define('CACHE_DIR', APP_ROOT . '/app/cache');
 
 require APP_ROOT . '/vendor/autoload.php';
 
-// Global functions
-function render_json($data, $status = 200) {
-    global $app;
-
-    $app
-        ->response
-        ->setStatus($status);
-
-    $app
-        ->response
-        ->headers
-        ->set('Content-Type', 'application/json');
-
-    echo json_encode($data);
-}
-
 // App
 $app = new \Slim\Slim([
     'templates.path' => APP_ROOT . '/app/templates',
-    'debug'          => true,
-    'log.level'      => \Slim\Log::DEBUG,
     'log.enabled'    => true,
     'log.writer'     => new \Slim\Extras\Log\DateTimeFileWriter(array(
         'path'        => APP_ROOT . '/app/logs',
         'name_format' => 'Ymd'
     ))
 ]);
+$app->configureMode('development', function() use ($app) {
+    $app->config('debug', true);
+    $app->log->setLevel(\Slim\Log::DEBUG);
+});
+$app->configureMode('production', function() {
+    $app->config('debug', true);
+    $app->log->setLevel(\Slim\Log::ERROR);
+});
 
 // DI
 $app
@@ -46,7 +36,7 @@ $app
         require APP_ROOT . '/vendor/doctrine/mongodb-odm/lib/Doctrine/ODM/MongoDB/Mapping/Annotations/DoctrineAnnotations.php';
 
         // Connection
-        if ($app->mode == 'production') {
+        if ($app->getMode() == 'production') {
             $conn = new Doctrine\MongoDB\Connection('127.0.0.1');
         } else {
             $conn = new Doctrine\MongoDB\Connection('192.168.33.10');

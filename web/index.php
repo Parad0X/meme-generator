@@ -2,6 +2,22 @@
 
 require __DIR__ . '/../app/bootstrap.php';
 
+// Global functions
+function render_json($data, $status = 200) {
+    global $app;
+
+    $app
+        ->response
+        ->setStatus($status);
+
+    $app
+        ->response
+        ->headers
+        ->set('Content-Type', 'application/json');
+
+    echo json_encode($data);
+}
+
 // Views
 $app
     ->view(new \Slim\Views\Twig())
