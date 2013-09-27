@@ -29,12 +29,8 @@ class ImageTools
     /**
      * {@inheritdoc}
      */
-    public static function resize(Image $image, $width = null, $height = null, $adjust = false, $quality = 90)
+    public static function resize($bytes, $width = null, $height = null, $adjust = false, $quality = 90)
     {
-        $bytes = $image
-            ->getFile()
-            ->getBytes();
-
         list(
             $originalWidth,
             $originalHeight,

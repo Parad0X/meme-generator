@@ -3,11 +3,52 @@
 {% block content %}
     <h1>Meme Generator</h1>
 
-    <pre>
-GET /
+    <div class="row">
+        <div class="span8">
+            <div id="memes-container">
+                {% for meme in memes %}
+                    <div style="padding:3px; border:1px solid #dedede" class="meme">
+                        <a href="/memes/{{ meme.id }}">
+                            <img src="/images/{{ meme.getImage.id }}" width="300" height="300">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
 
-GET /memes
+        <div class="span4">
+            <div style="background-color:#eee;text-align:center;padding:10px 0">
+                <div class="meme-images">
+                    {% for image in images %}
+                        {% set image_src = "/images/" ~ image.id ~ "?width=65&amp;height=65&amp;adj=crop" %}
+                        <img src="{{ image_src|raw }}" data-id="{{ image.id }}" style="padding:1px;border:1px solid #eee;cursor:pointer">
+                    {% endfor %}
+                </div>
 
-POST /memes
-    </pre>
+                <br>
+
+                <form action="/memes" method="POST" name="new_meme">
+                    <input type="hidden" name="image">
+                    <input type="text" name="text_top" placeholder="Top Text">
+                    <input type="text" name="text_bottom" placeholder="Bottom Text">
+                    <button class="btn btn-primary">Create Meme</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+    $("#memes-container").isotope();
+
+    (function() {
+        $(".meme-images img").click(function(e) {
+            var image = $(this);
+            $(".meme-images img").css({"border": "1px solid #eee"})
+            image.css({"border": "1px solid #999"});
+            $("form[name=new_meme] input[name=image]").val(image.data("id"));
+        });
+    })();
+    </script>
 {% endblock %}

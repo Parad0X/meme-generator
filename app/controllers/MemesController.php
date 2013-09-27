@@ -7,26 +7,9 @@
 use mg\ImageTools;
 
 /**
- * Index action.
- */
-$app->get('/api/memes', function() use ($app) {
-    $memes = $app
-        ->dm
-        ->getRepository('Meme')
-        ->findBy([])
-        ->toArray(false);
-
-    // Response
-    render_json([
-        'status' => 'success',
-        'data'   => $memes
-    ]);
-});
-
-/**
  * Create new meme.
  */
-$app->post('/api/memes', function() use ($app) {
+$app->post('/memes', function() use ($app) {
     $request    = $app->request;
     $imageId    = $request->post('image');
     $textTop    = $request->post('text_top');
@@ -76,11 +59,8 @@ $app->post('/api/memes', function() use ($app) {
     // Cleanup
     unlink($tempFile);
 
-    // Response
-    render_json([
-        'status' => 'success',
-        'data'   => $meme
-    ]);
+    // Redirect
+    $app->redirect('/memes/' . $meme->id);
 });
 
 /**
@@ -96,19 +76,10 @@ $app->get('/memes/:id', function($id) use ($app) {
         $app->pass();
     }
 
-    $bytes = $meme
-        ->image
-        ->getFile()
-        ->getBytes();
-
-    // Detect mime/type
-    $mimeType = (new finfo())->buffer($bytes);
-
-    // Response
-    $app
-        ->response
-        ->headers
-        ->set('Content-Type', $mimeType);
-
-    echo $bytes;
+    return $app->render(
+        'Memes/show.html.twig',
+        [
+            'meme' => $meme
+        ]
+    );
 });

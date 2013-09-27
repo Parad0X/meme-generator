@@ -7,22 +7,6 @@
 use mg\ImageTools;
 
 /**
- * Index action.
- */
-$app->get('/api/images', function() use ($app) {
-    $images = $app
-        ->dm
-        ->getRepository('Image')
-        ->findBy(['type' => null])
-        ->toArray();
-
-    render_json([
-        'status' => 'success',
-        'data'   => $images
-    ]);
-});
-
-/**
  * Upload image action.
  */
 $app->post('/api/images', function() use ($app) {
@@ -94,6 +78,10 @@ $app->delete('/api/images/:id', function($id) use ($app) {
  * @param string $id Image id
  */
 $app->get('/images/:id', function($id) use ($app) {
+    $adj    = $app->request->get('adj');
+    $width  = $app->request->get('width');
+    $height = $app->request->get('height');
+
     $image = $app
         ->dm
         ->getRepository('Image')
@@ -114,5 +102,9 @@ $app->get('/images/:id', function($id) use ($app) {
         ->headers
         ->set('Content-Type', $mimeType);
 
-    echo $bytes;
+    if ($width || $height) {
+        ImageTools::resize($bytes, $width, $height, $adj);
+    } else {
+        echo $bytes;
+    }
 });

@@ -5,16 +5,33 @@
 <head>
     <title>Meme Generator</title>
     <meta name="description" value="Simple meme-generator API">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+
     {% block head %}{% endblock %}
 </head>
 
 <body>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="/">Meme Generator</a>
+        </div>
+    </div>
+
+    <br>
+
     <!-- Content -->
-    {% block content %}{% endblock %}
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
     <!-- / Content -->
 
     <!-- Javascript -->
-    <script type="text/javascript" src="/assets/vendor/zepto/zepto.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/jquery/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="/assets/vendor/jquery/jquery.isotope.min.js"></script>
     {% block javascripts %}{% endblock %}
     <!-- / Javascript -->
 </body>

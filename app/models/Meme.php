@@ -37,6 +37,12 @@ class Meme implements JsonSerializable
         $this->createdAt  = new DateTime();
     }
 
+    public function getImage()
+    {
+        $this->image->__load();
+        return $this->image;
+    }
+
     /**
      * JsonSerializable::jsonSerialize
      */

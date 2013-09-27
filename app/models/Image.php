@@ -47,6 +47,11 @@ class Image implements JsonSerializable
         $this->type   = $type;
     }
 
+    /**
+     * Returns file.
+     *
+     * @return Doctrine\MongoDB\GridFSFile
+     */
     public function getFile()
     {
         return $this->file;
