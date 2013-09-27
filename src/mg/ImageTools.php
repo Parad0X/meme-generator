@@ -259,6 +259,6 @@ class ImageTools
      */
     private static function getFontFile()
     {
-        return APP_ROOT . '/app/fonts/Dosis-SemiBold.ttf';
+        return APP_ROOT . '/app/fonts/Franchise-Bold-hinted.ttf';
     }
 }

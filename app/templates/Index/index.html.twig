@@ -40,15 +40,15 @@
 
 {% block javascripts %}
     <script type="text/javascript">
-    $("#memes-container").isotope();
+    $(function(){
+        $("#memes-container").isotope();
 
-    (function() {
         $(".meme-images img").click(function(e) {
             var image = $(this);
             $(".meme-images img").css({"border": "1px solid #eee"})
             image.css({"border": "1px solid #999"});
             $("form[name=new_meme] input[name=image]").val(image.data("id"));
         });
-    })();
+    });
     </script>
 {% endblock %}
