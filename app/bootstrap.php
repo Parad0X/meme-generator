@@ -23,8 +23,8 @@ $app->configureMode('development', function() use ($app) {
     $app->config('debug', true);
     $app->log->setLevel(\Slim\Log::DEBUG);
 });
-$app->configureMode('production', function() {
-    $app->config('debug', true);
+$app->configureMode('production', function() use ($app) {
+    $app->config('debug', false);
     $app->log->setLevel(\Slim\Log::ERROR);
 });
 
