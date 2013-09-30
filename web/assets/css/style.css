@@ -1,0 +1,36 @@
+main> header {
+    -moz-box-sizing: border-box;
+    background: none repeat scroll 0 0 #000000;
+    color: #FFFFFF;
+    height: 100px;
+    position: relative;
+    width: 100%;
+}
+
+main > footer {
+    -moz-box-sizing: border-box;
+    background: none repeat scroll 0 0 #000000;
+    position: relative;
+    width: 100%;
+}
+
+div.new-meme-box {
+    width:300px;
+    background-color:#eee;
+    text-align:center;
+    padding:10px 0
+}
+
+div.new-meme-box div.step2 {
+    padding:10px;
+}
+
+div.new-meme-box div.step2 form input {
+    margin-bottom: 5px;
+}
+
+div.new-meme-box div.error {
+    color: red;
+    font-size: 1.2em;
+    margin: 10px 0 0 0;
+}

@@ -22,26 +22,29 @@ $app->post('/memes', function() use ($app) {
         ->find($imageId);
 
     if (! $image) {
-        return render_json([
-            'status' => 'error',
-            'data'   => 'Image not found'
-        ], 400);
+        render_json([
+            'status'  => 'error',
+            'message' => 'Image not found.'
+        ]);
     }
+
+    $textTop    = trim($textTop);
+    $textBottom = trim($textBottom);
 
     // Validate text
     if (! $textTop && ! $textBottom) {
-        return render_json([
-            'status' => 'error',
-            'data'   => 'Top and/or bottom text required'
-        ], 400);
+        render_json([
+            'status'  => 'error',
+            'message' => 'Top and/or bottom text is required.'
+        ]);
     }
 
-    // Create meme image and store it
+    // Create meme image ...
     ob_start();
         ImageTools::createMeme($image->file->getBytes(), $textTop, $textBottom);
     $memeImageData = ob_get_clean();
 
-    // Store it in a temp file
+    // ... store it in a temp file
     $tempFile = tempnam(sys_get_temp_dir(), 'meme');
     file_put_contents($tempFile, $memeImageData);
 
@@ -60,7 +63,10 @@ $app->post('/memes', function() use ($app) {
     unlink($tempFile);
 
     // Redirect
-    $app->redirect('/memes/' . $meme->id);
+    render_json([
+        'status'   => 'success',
+        'redirect' => '/memes/' . $meme->id
+    ]);
 });
 
 /**
@@ -82,4 +88,26 @@ $app->get('/memes/:id', function($id) use ($app) {
             'meme' => $meme
         ]
     );
+});
+
+/**
+ * Delete meme.
+ */
+$app->delete('/memes/:id', function($id) use ($app) {
+    if (! $app->secured)
+        $app->pass();
+
+    $meme = $app
+        ->dm
+        ->getRepository('Meme')
+        ->find($id);
+
+    if (! $meme) {
+        return $app->notFound();
+    }
+
+    $app->dm->remove($meme);
+    $app->dm->flush();
+
+    $app->redirect('/');
 });
