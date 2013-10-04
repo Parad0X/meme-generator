@@ -1,3 +1,4 @@
+<!-- @author Andrei Shevtsov <andrei@parad0x.me> -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,40 +43,47 @@
 
         <br clear="all">
     </div>
+
+    <div id="hidden-forest" style="display:none"></div>
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="/assets/js/jquery.slides.min.js"></script>
 
 <script>
 // New meme
 $(function() {
     // Globals
-    var memesUrl = ""; // "http://memes.parad0x.me";
     var image;
 
     // DOM
     var $form       = $("form[name=new_meme]");
     var $textTop    = $form.find("input[name=text_top]");
     var $textBottom = $form.find("input[name=text_bottom]");
-    var $previewContainer = $form.find(".step2-image-container");
+    var $previewContainer = $(".step2-image-container");
+    var $hiddenForest     = $("#hidden-forest");
 
     var slide = function(step) {
         var left = (step == 1) ? 0 : -300;
         $(".step").animate({ left: left }, 300);
     };
 
+    // Update image preview
     var updatePreview = function() {
         if (image) {
-            var imageUrl = memesUrl + "/memes/preview?" + $.param({
+            var imageUrl = "/memes/preview?" + $.param({
                 image       : image,
                 text_top    : $textTop.val(),
                 text_bottom : $textBottom.val()
             });
 
-            $previewContainer.empty();
+            $hiddenForest.empty();
 
-            $("<img>", {width: 275, src: imageUrl}).appendTo($previewContainer);
+            $("<img>", {width: 275, src: imageUrl})
+                .appendTo($hiddenForest)
+                .load(function() {
+                    $previewContainer.html($hiddenForest.html());
+                    $hiddenForest.empty();
+                });
         }
     };
 
@@ -101,15 +109,16 @@ $(function() {
     $form.submit(function(e) {
         e.preventDefault();
 
+        // Make sure we have everything we need
         if (! $form.find("input[name=image]").val()) {
             return;
         }
-
         if (!$textTop.val() && !$textBottom.val()) {
             return;
         }
 
-        $.post(memesUrl + "/memes", $form.serialize())
+        // Create new meme
+        $.post("/memes", $form.serialize())
         .success(function(response) {
             if (response.redirect) {
                 document.location.href = response.redirect;
