@@ -37,4 +37,5 @@
 
 .meme-images img {
     cursor: pointer;
+    padding: 5px;
 }
