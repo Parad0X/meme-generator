@@ -92,12 +92,25 @@ $app->get('/memes/preview', function() use ($app) {
         return $app->pass();
     }
 
+    $bytes = $image->file->getBytes();
+
+    // Detect mime/type
+    $mimeType = (new finfo())->buffer($bytes);
+
+    // It's an image
+    $app
+        ->response
+        ->headers
+        ->set('Content-Type', $mimeType);
+
     if ($textTop || $textBottom) {
-        ImageTools::createMeme($image->file->getBytes(), $textTop, $textBottom, 60);
+        ImageTools::createMeme($bytes, $textTop, $textBottom, 60);
     } else {
-        echo $image
-            ->file
-            ->getBytes();
+        // Cache it
+        $app->etag($image->md5);
+        $app->lastModified($image->uploadDate->getTimestamp());
+
+        echo $bytes;
     }
 });
 

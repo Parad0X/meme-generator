@@ -96,11 +96,15 @@ $app->get('/images/:id', function($id) use ($app) {
     // Detect mime/type
     $mimeType = (new finfo())->buffer($bytes);
 
-    // Response
+    // It's an image
     $app
         ->response
         ->headers
         ->set('Content-Type', $mimeType);
+
+    // Caching
+    $app->etag($image->md5);
+    $app->lastModified($image->uploadDate->getTimestamp());
 
     if ($width || $height) {
         ImageTools::resize($bytes, $width, $height, $adj);

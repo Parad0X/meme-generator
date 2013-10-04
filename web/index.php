@@ -2,14 +2,6 @@
 
 require __DIR__ . '/../app/bootstrap.php';
 
-// Secure? ;)
-$authHeader = $app
-    ->request
-    ->headers
-    ->get('X-Auth');
-
-$app->secured = ('a33350c7a5b59d7b1eb3aed7286948b2' == md5($authHeader));
-
 // Global functions
 function render_json($data, $status = 200) {
     global $app;
@@ -37,6 +29,16 @@ $app
         'autoescape'       => true
     ];
 $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
+
+// Secure
+$app->secured = function() use ($app) {
+    $authHeader = $app
+        ->request
+        ->headers
+        ->get('X-Auth');
+
+    return ('a33350c7a5b59d7b1eb3aed7286948b2' == md5($authHeader));
+};
 
 // Routes
 $controllers = new DirectoryIterator(APP_ROOT . '/app/controllers');

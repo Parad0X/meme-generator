@@ -31,6 +31,9 @@ class Image implements JsonSerializable
     /** @ODM\String @ODM\Index */
     public $type;
 
+    /** @ODM\Date */
+    public $uploadDate;
+
     /**
      * Constructor.
      *
