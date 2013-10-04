@@ -5,9 +5,9 @@
 
     <div class="row">
         <div class="col-lg-8">
-            <div id="memes-container">
+            <div id="memes-container" class="memes-container">
                 {% for meme in memes %}
-                    <div style="padding:3px; border:1px solid #dedede" class="meme">
+                    <div class="meme">
                         <a href="/memes/{{ meme.id }}">
                             <img src="/images/{{ meme.getImage.id }}" width="225">
                         </a>
@@ -17,31 +17,7 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="new-meme-box">
-                <div class="step1">
-                    <h4>Step1. Choose an image.</h4>
-
-                    <div class="meme-images">
-                        {% for image in images %}
-                            {% set image_src = "/images/" ~ image.id ~ "?width=65&amp;height=65&amp;adj=crop" %}
-                            <img src="{{ image_src|raw }}" data-id="{{ image.id }}" style="padding:1px;border:1px solid #eee;cursor:pointer">
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <div class="error"></div>
-
-                <div class="step2">
-                    <h4>Step 2. Write something silly.</h4>
-
-                    <form action="#" method="POST" name="new_meme">
-                        <input type="hidden" name="image">
-                        <input type="text" name="text_top" placeholder="Top Text" class="form-control">
-                        <input type="text" name="text_bottom" placeholder="Bottom Text" class="form-control">
-                        <button class="btn btn-primary">Create Meme</button>
-                    </form>
-                </div>
-            </div>
+            <iframe src="/form" width="300" height="475" frameborder="0" scrolling="no" seamless></iframe>
         </div>
     </div>
 {% endblock %}
@@ -57,63 +33,6 @@
             masonry : {
                 columnWidth: $container.width() / 3
             }
-        });
-    });
-
-    // New meme
-    $(function() {
-        var $form  = $("form[name=new_meme]");
-        var $error = $(".new-meme-box div.error");
-
-        var error = function(message) {
-            if (message) {
-                $error.text(message);
-            } else {
-                $error.text("");
-            }
-        };
-
-        // Image picker
-        $(".meme-images img").click(function(e) {
-            error();
-            var image = $(this);
-            $(".meme-images img").css({"border": "1px solid #eee"})
-            image.css({"border": "1px solid #999"});
-            $("form[name=new_meme] input[name=image]").val(image.data("id"));
-        });
-
-        // Form submitted
-        $form.submit(function(e) {
-            e.preventDefault();
-
-            var $textTop    = $form.find("input[name=text_top]");
-            var $textBottom = $form.find("input[name=text_bottom]");
-
-            if (! $form.find("input[name=image]").val()) {
-                error("Please choose an image.");
-                return;
-            }
-
-            if (!$textTop.val() && !$textBottom.val()) {
-                error("Top and/or bottom text is required.");
-                return;
-            }
-
-            $.post("/memes", $form.serialize())
-            .success(function(response) {
-                if (response.redirect) {
-                    document.location.href = response.redirect;
-                } else {
-                    error("Oops. Something went wrong.");
-                }
-            })
-            .error(function(response) {
-                if (response.status == "error") {
-                    error.html(response.data);
-                } else {
-                    error("Oops. Something went wrong.");
-                }
-            });
         });
     });
     </script>

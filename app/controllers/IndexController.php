@@ -21,17 +21,11 @@ $app->get('/', function() use ($app) {
         $memes->skip(20 * ($page - 1));
     }
 
-    $images = $app
-        ->dm
-        ->getRepository('Image')
-        ->findBy(['type' => null]);
-
     // View
     $app->render(
         'Index/index.html.twig',
         [
-            'memes'  => $memes,
-            'images' => $images
+            'memes' => $memes
         ]
     );
 });

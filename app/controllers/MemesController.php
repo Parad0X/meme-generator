@@ -70,6 +70,38 @@ $app->post('/memes', function() use ($app) {
 });
 
 /**
+ * Meme preview.
+ */
+$app->get('/memes/preview', function() use ($app) {
+    $request    = $app->request;
+    $imageId    = $request->get('image');
+    $textTop    = $request->get('text_top');
+    $textBottom = $request->get('text_bottom');
+
+    // No spaces please
+    $textTop    = trim($textTop);
+    $textBottom = trim($textBottom);
+
+    // Find image
+    $image = $app
+        ->dm
+        ->getRepository('Image')
+        ->find($imageId);
+
+    if (! $image) {
+        return $app->pass();
+    }
+
+    if ($textTop || $textBottom) {
+        ImageTools::createMeme($image->file->getBytes(), $textTop, $textBottom, 60);
+    } else {
+        echo $image
+            ->file
+            ->getBytes();
+    }
+});
+
+/**
  * Show meme.
  */
 $app->get('/memes/:id', function($id) use ($app) {

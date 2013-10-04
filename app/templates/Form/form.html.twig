@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/css/form.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="new-meme-box-wrapper">
+    <div class="new-meme-box">
+        <div class="step step1">
+            <h4>Step1. Choose an image.</h4>
+
+            <div class="meme-images">
+                {% for image in images %}
+                    {% set image_src = "/images/" ~ image.id ~ "?width=65&amp;height=65&amp;adj=crop" %}
+                    <img src="{{ image_src|raw }}" data-id="{{ image.id }}">
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="step step2">
+            <h4>Step 2. Write something silly.</h4>
+
+            <div class="back">
+                <a href="#">&laquo; Choose different image</a>
+            </div>
+
+            <form action="#" method="POST" name="new_meme">
+                <input type="hidden" name="image">
+                <input type="text" name="text_top" placeholder="Top Text" class="form-control">
+                <div class="step2-image-container"></div>
+                <input type="text" name="text_bottom" placeholder="Bottom Text" class="form-control">
+                <button class="btn btn-primary">Create Meme</button>
+            </form>
+        </div>
+
+        <br clear="all">
+    </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/assets/js/jquery.slides.min.js"></script>
+
+<script>
+// New meme
+$(function() {
+    // Globals
+    var memesUrl = ""; // "http://memes.parad0x.me";
+    var image;
+
+    // DOM
+    var $form       = $("form[name=new_meme]");
+    var $textTop    = $form.find("input[name=text_top]");
+    var $textBottom = $form.find("input[name=text_bottom]");
+    var $previewContainer = $form.find(".step2-image-container");
+
+    var slide = function(step) {
+        var left = (step == 1) ? 0 : -300;
+        $(".step").animate({ left: left }, 300);
+    };
+
+    var updatePreview = function() {
+        if (image) {
+            var imageUrl = memesUrl + "/memes/preview?" + $.param({
+                image       : image,
+                text_top    : $textTop.val(),
+                text_bottom : $textBottom.val()
+            });
+
+            $previewContainer.empty();
+
+            $("<img>", {width: 275, src: imageUrl}).appendTo($previewContainer);
+        }
+    };
+
+    // Back
+    $(".back a").click(function() {
+        image = null;
+        slide(1);
+    });
+
+    // Image picker
+    $(".meme-images img").click(function(e) {
+        image = $(this).data("id");
+        $("form[name=new_meme] input[name=image]").val(image);
+        updatePreview();
+        slide(2);
+    });
+
+    // Update preview on text change
+    $textTop.keyup(updatePreview);
+    $textBottom.keyup(updatePreview);
+
+    // Form submitted
+    $form.submit(function(e) {
+        e.preventDefault();
+
+        if (! $form.find("input[name=image]").val()) {
+            return;
+        }
+
+        if (!$textTop.val() && !$textBottom.val()) {
+            return;
+        }
+
+        $.post(memesUrl + "/memes", $form.serialize())
+        .success(function(response) {
+            if (response.redirect) {
+                document.location.href = response.redirect;
+            } else {
+                alert("Oops. Something went wrong.");
+            }
+        })
+        .error(function(response) {
+            if (response.status == "error") {
+                alert(response.data);
+            } else {
+                alert("Oops. Something went wrong.");
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>

@@ -138,15 +138,16 @@ class ImageTools
     }
 
     /**
-     *
+     * Create meme image.
      *
      * @param string $bytes
      * @param string $top
      * @param string $bottom
+     * @param int    $quality
      *
      * @return
      */
-    public static function createMeme($bytes, $topText, $bottomText)
+    public static function createMeme($bytes, $topText, $bottomText, $quality = 85)
     {
         $fontFile    = self::getFontFile();
         $fontSize    = 51;
@@ -222,7 +223,7 @@ class ImageTools
             self::addStrokedText($image, $fontSize, $textX, $textY, $text);
         }
 
-        return imagejpeg($image, null, 85);
+        return imagejpeg($image, null, $quality);
     }
 
     /**
