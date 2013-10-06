@@ -66,10 +66,10 @@ class Image implements JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'id'          => (string) $this->id,
-            'width'       => $this->width,
-            'height'      => $this->height,
-            'type'        => $this->type
+            'id'     => (string) $this->id,
+            'width'  => $this->width,
+            'height' => $this->height,
+            'type'   => $this->type
         ];
     }
 }

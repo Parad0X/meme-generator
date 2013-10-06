@@ -7,7 +7,54 @@
 use mg\ImageTools;
 
 /**
- * Upload image action.
+ * Show image.
+ *
+ * @param string $id Image id
+ */
+$app->get('/images/:id', function($id) use ($app) {
+    $adj    = $app->request->get('adj');
+    $width  = $app->request->get('width');
+    $height = $app->request->get('height');
+
+    $image = $app
+        ->dm
+        ->getRepository('Image')
+        ->find($id);
+
+    if (! $image) {
+        return $app->pass();
+    }
+
+    $bytes = $image->file->getBytes();
+
+    // Detect mime/type
+    $mimeType = (new finfo())->buffer($bytes);
+
+    // It's an image
+    $app
+        ->response
+        ->headers
+        ->set('Content-Type', $mimeType);
+
+    // Caching
+    $app->etag($image->md5);
+    $app->lastModified($image->uploadDate->getTimestamp());
+
+    if ($width || $height) {
+        ImageTools::resize($bytes, $width, $height, $adj);
+    } else {
+        echo $bytes;
+    }
+});
+
+//********************************************* ADMINS *********************************************//
+
+if (! $app->secured) {
+    return;
+}
+
+/**
+ * Upload image.
  */
 $app->post('/api/images', function() use ($app) {
     if (!isset($_FILES['image'])) {
@@ -70,45 +117,4 @@ $app->delete('/api/images/:id', function($id) use ($app) {
     render_json([
         'status' => 'sucess'
     ]);
-});
-
-/**
- * Show image.
- *
- * @param string $id Image id
- */
-$app->get('/images/:id', function($id) use ($app) {
-    $adj    = $app->request->get('adj');
-    $width  = $app->request->get('width');
-    $height = $app->request->get('height');
-
-    $image = $app
-        ->dm
-        ->getRepository('Image')
-        ->find($id);
-
-    if (! $image) {
-        return $app->pass();
-    }
-
-    $bytes = $image->file->getBytes();
-
-    // Detect mime/type
-    $mimeType = (new finfo())->buffer($bytes);
-
-    // It's an image
-    $app
-        ->response
-        ->headers
-        ->set('Content-Type', $mimeType);
-
-    // Caching
-    $app->etag($image->md5);
-    $app->lastModified($image->uploadDate->getTimestamp());
-
-    if ($width || $height) {
-        ImageTools::resize($bytes, $width, $height, $adj);
-    } else {
-        echo $bytes;
-    }
 });

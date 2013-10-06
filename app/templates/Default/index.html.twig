@@ -1,17 +1,17 @@
 {% extends 'layout.html.twig' %}
 
 {% block content %}
-    <h1>Meme Generator</h1>
-
     <div class="row">
         <div class="col-lg-8">
-            <div id="memes-container" class="memes-container">
+            <div class="memes">
                 {% for meme in memes %}
                     <div class="meme">
                         <a href="/memes/{{ meme.id }}">
                             <img src="/images/{{ meme.getImage.id }}" width="225">
                         </a>
                     </div>
+                {% else %}
+                    <div class="text-center">No memes has been aproved yet. Check back soon!</div>
                 {% endfor %}
             </div>
         </div>
@@ -23,17 +23,19 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript">
-    // isotope
-    $(window).load(function() {
-        var $container = $("#memes-container");
+    {% if memes.count(true) %}
+        <script type="text/javascript">
+        // isotope
+        $(window).load(function() {
+            var $container = $(".memes");
 
-        $container.isotope({
-            resizable: false,
-            masonry : {
-                columnWidth: $container.width() / 3
-            }
+            $container.isotope({
+                resizable: false,
+                masonry : {
+                    columnWidth: $container.width() / 3
+                }
+            });
         });
-    });
-    </script>
+        </script>
+    {% endif %}
 {% endblock %}

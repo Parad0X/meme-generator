@@ -3,39 +3,41 @@
 <html lang="en">
 
 <head>
-    <title>Meme Generator</title>
+    <title>The Walking Dead</title>
     <meta name="description" value="Simple meme-generator API">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <!-- Bootstrap core CSS -->
-    <link href="/assets/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- javascript -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="/assets/vendor/jquery/jquery.isotope.min.js"></script>
+    <!-- stylesheets -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/css/style.css" rel="stylesheet">
-
-    {% block head %}{% endblock %}
+    {% block stylesheets %}{% endblock %}
 </head>
 
 <body>
-    <main>
-        <header>
-            <a class="brand" href="/">Meme Generator</a>
-        </header>
+    <div id="fb-root"></div>
 
-        <!-- Content -->
+    <header>
         <div class="container">
-            {% block content %}{% endblock %}
+            <a class="brand" href="/"><h1>WALKING DEAD</h1></a>
         </div>
-        <!-- / Content -->
+    </header>
 
-        <footer>
-            <div class="row">
-                <div class="span6">&copy; 2013</div>
-            </div>
-        </footer>
+    <!-- Content -->
+    <main class="main container">
+        {% block content %}{% endblock %}
     </main>
+    <!-- / Content -->
+
+    <footer>
+        <div class="container">
+            <div class="span6">The Walking Dead &copy; {{ "now"|date('Y') }}</div>
+        </div>
+    </footer>
 
     <!-- Javascript -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-    <script src="/assets/vendor/jquery/jquery.isotope.min.js"></script>
     {% block javascripts %}{% endblock %}
     <!-- / Javascript -->
 </body>

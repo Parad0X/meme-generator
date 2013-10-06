@@ -4,9 +4,14 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(collection="memes")
+ * @ODM\Index(keys={"status":1,"uploadDate":-1})
  */
 class Meme implements JsonSerializable
 {
+    const STATUS_NEW       = 'new';
+    const STATUS_PUBLISHED = 'published';
+    const STATUS_REJECTED  = 'rejected';
+
     /** @ODM\Id */
     public $id;
 
@@ -19,8 +24,21 @@ class Meme implements JsonSerializable
     /** @ODM\ReferenceOne(targetDocument="Image",simple=true,cascade="all") */
     public $image;
 
+    /** @ODM\String */
+    public $status = self::STATUS_NEW;
+
     /** @ODM\Date(name="created_at") */
     public $createdAt;
+
+    /**
+     * Returns a list of valid statuses.
+     *
+     * @return array
+     */
+    public static function getStatuses()
+    {
+        return [ self::STATUS_NEW, self::STATUS_PUBLISHED, self::STATUS_REJECTED ];
+    }
 
     /**
      * Constructor.
@@ -44,6 +62,16 @@ class Meme implements JsonSerializable
     }
 
     /**
+     * Returns meme's share url.
+     *
+     * @return string
+     */
+    public function getShareUrl()
+    {
+        return APP_URL . $this->id;
+    }
+
+    /**
      * JsonSerializable::jsonSerialize
      */
     public function jsonSerialize()
@@ -52,7 +80,8 @@ class Meme implements JsonSerializable
             'id'          => (string) $this->id,
             'image'       => $this->image,
             'text_top'    => $this->textTop,
-            'text_bottom' => $this->textBottom
+            'text_bottom' => $this->textBottom,
+            'status'      => $this->status
         ];
     }
 }

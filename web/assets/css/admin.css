@@ -1,0 +1,53 @@
+/**
+ * Memes
+ */
+div.memes .meme {
+    margin-bottom: 20px;
+}
+
+/**
+ * Source images.
+ */
+section.source-images {
+    background-color: #eee;
+    padding-bottom: 15px;
+}
+
+section.source-images form button {
+    margin-top: 10px;
+}
+
+section.source-images .images img {
+    margin: 3px;
+    cursor: pointer;
+}
+
+/**
+ * Meme overlay thingie
+ */
+div.meme-overlay {
+    position : absolute;
+    background-color: #000;
+    opacity: 0.8;
+    color: #fff;
+}
+
+div.meme-overlay div {
+    width: 49%;
+    float:left;
+    text-align: center;
+}
+
+div.meme-overlay .glyphicon {
+    font-size: 40px;
+    color: #fff;
+    cursor: pointer;
+}
+
+div.meme-overlay .glyphicon.approve:hover {
+    color: green;
+}
+
+div.meme-overlay .glyphicon.reject:hover {
+    color: red;
+}

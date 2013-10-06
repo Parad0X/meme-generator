@@ -32,6 +32,15 @@ $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
 
 // Secure
 $app->secured = function() use ($app) {
+    // For I am admin!
+    $ip = $app
+        ->request
+        ->getIp();
+
+    if ('::1' == $ip)  {
+        return true;
+    }
+
     $authHeader = $app
         ->request
         ->headers

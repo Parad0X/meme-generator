@@ -7,6 +7,7 @@ date_default_timezone_set('UTC');
  */
 define('APP_ROOT', realpath(__DIR__ . '/..'));
 define('CACHE_DIR', APP_ROOT . '/app/cache');
+define('APP_URL', 'http://twd.parad0x.me/');
 
 require APP_ROOT . '/vendor/autoload.php';
 

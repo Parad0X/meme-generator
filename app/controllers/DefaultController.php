@@ -14,7 +14,10 @@ $app->get('/', function() use ($app) {
     $memes = $app
         ->dm
         ->getRepository('Meme')
-        ->findBy([], ['created_at' => -1])
+        ->findBy(
+            ['status' => Meme::STATUS_PUBLISHED],
+            ['created_at' => -1]
+        )
         ->limit(20);
 
     if ($page > 1) {
@@ -23,7 +26,7 @@ $app->get('/', function() use ($app) {
 
     // View
     $app->render(
-        'Index/index.html.twig',
+        'Default/index.html.twig',
         [
             'memes' => $memes
         ]

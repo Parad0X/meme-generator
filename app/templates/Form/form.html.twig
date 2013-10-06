@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     <!-- Bootstrap core CSS -->
-    <link href="/assets/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="/assets/css/form.css" rel="stylesheet">
 </head>
 
@@ -20,7 +20,7 @@
             <div class="meme-images">
                 {% for image in images %}
                     {% set image_src = "/images/" ~ image.id ~ "?width=130&amp;height=130&amp;adj=crop" %}
-                    <img src="{{ image_src|raw }}" data-id="{{ image.id }}">
+                    <img src="{{ image_src|raw }}" data-id="{{ image.id }}" class="img-thumbnail">
                 {% endfor %}
             </div>
         </div>

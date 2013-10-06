@@ -36,7 +36,7 @@ $app->post('/memes', function() use ($app) {
         render_json([
             'status'  => 'error',
             'message' => 'Top and/or bottom text is required.'
-        ]);
+        ], 400);
     }
 
     // Create meme image ...
@@ -68,6 +68,33 @@ $app->post('/memes', function() use ($app) {
         'redirect' => '/memes/' . $meme->id
     ]);
 });
+
+/**
+ * Show meme.
+ */
+$app->get('/memes/:id', function($id) use ($app) {
+    $meme = $app
+        ->dm
+        ->getRepository('Meme')
+        ->find($id);
+
+    if (! $meme) {
+        $app->pass();
+    }
+
+    return $app->render(
+        'Memes/show.html.twig',
+        [
+            'meme' => $meme
+        ]
+    );
+});
+
+//********************************************* ADMINS *********************************************//
+
+if (! $app->secured) {
+    return;
+}
 
 /**
  * Meme preview.
@@ -115,9 +142,9 @@ $app->get('/memes/preview', function() use ($app) {
 });
 
 /**
- * Show meme.
+ * Update meme.
  */
-$app->get('/memes/:id', function($id) use ($app) {
+$app->post('/memes/:id', function($id) use ($app) {
     $meme = $app
         ->dm
         ->getRepository('Meme')
@@ -127,21 +154,34 @@ $app->get('/memes/:id', function($id) use ($app) {
         $app->pass();
     }
 
-    return $app->render(
-        'Memes/show.html.twig',
-        [
-            'meme' => $meme
-        ]
-    );
+    $request = $app->request;
+
+    if ($status = $request->put('status')) {
+        if (! in_array($status, Meme::getStatuses())) {
+            return render_json([
+                'status'  => 'error',
+                'message' => sprintf('Invalid status %s', $status)
+            ]);
+        }
+
+        $meme->status = $status;
+    }
+
+    // Persist
+    $app->dm->persist($meme);
+    $app->dm->flush();
+
+    // Yay!
+    render_json([
+        'status' => 'success',
+        'data'   => $meme
+    ]);
 });
 
 /**
  * Delete meme.
  */
 $app->delete('/memes/:id', function($id) use ($app) {
-    if (! $app->secured)
-        $app->pass();
-
     $meme = $app
         ->dm
         ->getRepository('Meme')

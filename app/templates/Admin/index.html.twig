@@ -1,26 +1,53 @@
 {% extends 'layout.html.twig' %}
 
 {% block content %}
-    <h2>Images</h2>
-    <div id="images">
-        {% for image in images %}
-            <img src="/images/{{ image.id }}?width=175&amp;height=175&amp;adj=crop" data-id="{{ image.id }}">
-        {% endfor %}
+    <div class="row">
+        <section class="col-lg-9">
+            <h2>Moderation Queue</h2>
+
+            <div class="memes">
+                {% for meme in memes %}
+                    <div class="meme" data-id="{{ meme.id }}">
+                        <img src="/images/{{ meme.getImage.id }}" width="200">
+                    </div>
+                {% else %}
+                    Nothing to moderate! Yay! Check back later though.
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="col-lg-3 source-images">
+            <h2>Images</h2>
+            <div class="images text-center">
+                {% for image in images %}
+                    <img src="/images/{{ image.id }}?width=115&amp;height=115&amp;adj=crop" data-id="{{ image.id }}" class="img-thumbnail">
+                {% endfor %}
+            </div>
+
+            <h2>Upload</h2>
+            <form action="/api/images" method="post" enctype="multipart/form-data">
+                <input type="file" name="image">
+                <button type="button" class="btn btn-primary">Upload</button>
+            </form>
+        </section>
     </div>
 
-    <br>
+    <!-- Approve/reject overlaying -->
+    <div class="meme-overlay" style="display:none">
+        <div><span class="glyphicon glyphicon-ok approve"></span></div>
+        <div><span class="glyphicon glyphicon-remove reject"></span></div>
+    </div>
+{% endblock %}
 
-    <h2>Uploade new image</h2>
-    <form action="/api/images" method="post" enctype="multipart/form-data" name="upload_image">
-        <input type="file" name="image">
-        <input type="submit" value="Upload">
-    </form>
+{% block stylesheets %}
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link href="/assets/css/admin.css" rel="stylesheet">
 {% endblock %}
 
 {% block javascripts %}
     <script type="text/javascript">
     // Delete image
-    $("#images img").click(function(e) {
+    $(".images img").click(function(e) {
         if (! confirm("Please confirm you want to delete this image?")) {
             return;
         }
@@ -36,5 +63,89 @@
             }
         })
     });
+
+    // Meme overlay thingie
+    (function() {
+        var overlayOn = true;
+        var memeId;
+
+        // Aprove/reject memes
+        var updateMeme = function(status) {
+            overlayOn = false;
+            hideOverlay();
+
+            $.ajax({
+                url: "/memes/" + memeId,
+                data: { status: status },
+                type: "POST", // PUT doesn't seem to be working for some reason :(
+                error: function() {
+                    alert("Something went wrong. Please reload the page and try again.");
+                }
+            });
+
+            $(".memes")
+                .isotope(
+                    "remove",
+                    $(".meme[data-id=" + memeId + "]"),
+                    function() {
+                        overlayOn = true;
+                    }
+                );
+        };
+        var showOverlay = function(meme) {
+            if (! overlayOn)
+                return;
+
+            memeId = meme.data("id");
+
+            $(".meme-overlay")
+                .css({
+                    width      : meme.width() + "px",
+                    height     : meme.height() + "px",
+                    left       : meme.offset().left + "px",
+                    top        : meme.offset().top + "px",
+                    paddingTop : ((meme.height() / 2) - 30) + "px"
+                })
+                .show();
+        };
+        var hideOverlay = function() {
+            $(".meme-overlay").hide();
+        };
+
+        $(".meme-overlay .approve").click(function(e) {
+            e.preventDefault();
+
+            if (confirm("Please confirm you want to approve this meme.")) {
+                updateMeme("published");
+            }
+        });
+        $(".meme-overlay .reject").click(function(e) {
+            e.preventDefault();
+
+            if (confirm("Please confirm you want to reject this meme.")) {
+                updateMeme("rejected");
+            }
+        });
+
+        // Approve/reject image
+        $(window).load(function() {
+            $(".memes .meme").mouseover(function() { showOverlay($(this)); });
+            $(".meme-overlay").mouseout(function() { hideOverlay(); });
+        });
+    })();
+
+    // Isotope to make things prettier
+    {% if memes.count(true) %}
+        $(window).load(function() {
+            var $container = $(".memes");
+
+            $container.isotope({
+                resizable: false,
+                masonry : {
+                    columnWidth: $container.width() / 4
+                }
+            });
+        });
+    {% endif %}
     </script>
 {% endblock %}
