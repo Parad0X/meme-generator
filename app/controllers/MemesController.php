@@ -90,12 +90,6 @@ $app->get('/memes/:id', function($id) use ($app) {
     );
 });
 
-//********************************************* ADMINS *********************************************//
-
-if (! $app->secured) {
-    return;
-}
-
 /**
  * Meme preview.
  */
@@ -104,6 +98,9 @@ $app->get('/memes/preview', function() use ($app) {
     $imageId    = $request->get('image');
     $textTop    = $request->get('text_top');
     $textBottom = $request->get('text_bottom');
+    $adj        = $request->get('adj');
+    $width      = $request->get('width');
+    $height     = $request->get('height');
 
     // No spaces please
     $textTop    = trim($textTop);
@@ -131,15 +128,37 @@ $app->get('/memes/preview', function() use ($app) {
         ->set('Content-Type', $mimeType);
 
     if ($textTop || $textBottom) {
-        ImageTools::createMeme($bytes, $textTop, $textBottom, 60);
+        ob_start();
+            ImageTools::createMeme($bytes, $textTop, $textBottom, 60);
+        $bytes = ob_get_clean();
     } else {
-        // Cache it
-        $app->etag($image->md5);
         $app->lastModified($image->uploadDate->getTimestamp());
+    }
 
+    // Generate etag
+    $etag = sprintf(
+        '%s-%s-%s-%d-%d',
+        $image->md5,
+        $textTop,
+        $textBottom,
+        (int) $width,
+        (int) $height
+    );
+    $app->etag(md5($etag));
+
+    // Resize the result image
+    if ($width || $height) {
+        ImageTools::resize($bytes, $width, $height, $adj);
+    } else {
         echo $bytes;
     }
 });
+
+//********************************************* ADMINS *********************************************//
+
+if (! $app->secured) {
+    return;
+}
 
 /**
  * Update meme.
