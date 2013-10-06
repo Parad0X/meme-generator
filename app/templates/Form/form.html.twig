@@ -7,7 +7,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/css/form.css" rel="stylesheet">
+    <link href="/assets/css/form.css?{{ constant('REVISION') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -94,12 +94,13 @@ $(function() {
 
             $hiddenForest.empty();
 
-            $("<img>", {width: 275, src: imageUrl})
+            $("<img>", {width: 275})
                 .appendTo($hiddenForest)
                 .load(function() {
                     $previewContainer.html($hiddenForest.html());
                     $hiddenForest.empty();
-                });
+                })
+                .attr("src", imageUrl);
         }
     };
 
@@ -114,6 +115,7 @@ $(function() {
     $(".back a").click(function() {
         image = null;
         slide(1);
+        $("form input[type=text]").val("");
     });
 
     // Image picker

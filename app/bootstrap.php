@@ -5,11 +5,12 @@ date_default_timezone_set('UTC');
 /**
  * Constants.
  */
-define('APP_ROOT',       realpath(__DIR__ . '/..'));
-define('CACHE_DIR',      APP_ROOT . '/app/cache');
-define('APP_URL',        'http://twd.parad0x.me/');
-define('SECURITY_TOKEN', 'a33350c7a5b59d7b1eb3aed7286948b2');
+define('APP_ROOT',        realpath(__DIR__ . '/..'));
+define('CACHE_DIR',       APP_ROOT . '/app/cache');
+define('APP_URL',         'http://twd.parad0x.me/');
+define('SECURITY_TOKEN',  'a33350c7a5b59d7b1eb3aed7286948b2');
 define('SECURITY_COOKIE', 'twd-auth-cookie-poo');
+define('REVISION',        file_exists(APP_ROOT . '/REVISION') ? file_get_contents(APP_ROOT . '/REVISION') : time());
 
 require APP_ROOT . '/vendor/autoload.php';
 
