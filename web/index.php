@@ -36,17 +36,16 @@ $app->secured = function() use ($app) {
     $ip = $app
         ->request
         ->getIp();
-
     if ('::1' == $ip)  {
         return true;
     }
 
-    $authHeader = $app
-        ->request
-        ->headers
-        ->get('X-Auth');
+    // Security cookie
+    if (SECURITY_TOKEN == $app->getCookie(SECURITY_COOKIE)) {
+        return true;
+    }
 
-    return ('a33350c7a5b59d7b1eb3aed7286948b2' == md5($authHeader));
+    return false;
 };
 
 // Routes

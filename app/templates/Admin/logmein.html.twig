@@ -1,0 +1,20 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <form action="/logmein" method="POST" class="form-inline" role="form">
+            <div class="form-group">
+                <label class="sr-only" for="token">Token</label>
+                <input type="password" name="token" class="form-control" id="token" placeholder="Token">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign in</button>
+
+            <div class="form-group">
+                {% if error %}
+                    <p style="color:red; padding-top:8px">Nope. Please try again.</p>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

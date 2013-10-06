@@ -22,7 +22,7 @@ set :use_sudo,          false
 # User agent forwarding
 ssh_options[:forward_agent] = true
 ssh_options[:auth_methods]  = ["publickey"]
-ssh_options[:keys]          = ["/~Devel/Azure/azure-cert.pem"]
+ssh_options[:keys]          = ["~/Devel/Azure/azure-cert.pem"]
 
 # Stuff
 namespace :composer do
