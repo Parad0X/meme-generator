@@ -65,20 +65,14 @@ $app->post('/api/images', function() use ($app) {
 
     // Was file uploaded ok?
     if ($file['error']) {
-        return render_json([
-            'status' => 'error',
-            'data'   => 'Image upload error.'
-        ]);
+        return $app->redirect('/admin?error=1');
     }
 
     // Valid image?
     try {
         list($width, $height, $type) = ImageTools::getImageDetails($file['tmp_name']);
     } catch (Exception $e) {
-        return render_json([
-            'status' => 'error',
-            'data'   => 'Uploaded file is not a valid image: ' . $e->getMessage()
-        ]);
+        return $app->redirect('/admin?error=2');
     }
 
     // Create new image model
@@ -89,10 +83,7 @@ $app->post('/api/images', function() use ($app) {
     $app->dm->flush();
 
     // Response
-    render_json([
-        'status' => 'success',
-        'data'   => $image
-    ]);
+    return $app->redirect('/admin');
 });
 
 /**

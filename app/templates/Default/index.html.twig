@@ -17,14 +17,14 @@
         </div>
 
         <div class="col-lg-4">
-            <iframe src="/form" width="300" height="475" frameborder="0" scrolling="no" seamless></iframe>
+            <iframe src="/form" width="300" height="330" frameborder="0" scrolling="no" id="twd-iframe" seamless></iframe>
         </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {% if memes.count(true) %}
-        <script type="text/javascript">
+        <script>
         // isotope
         $(window).load(function() {
             var $container = $(".memes");
@@ -38,4 +38,12 @@
         });
         </script>
     {% endif %}
+
+    <script>
+    function resizeTwdIframe(height) {
+        $("#twd-iframe")
+            .stop()
+            .animate({height: height}, 200);
+    }
+    </script>
 {% endblock %}

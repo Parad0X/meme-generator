@@ -54,6 +54,7 @@
 $(function() {
     // Globals
     var image;
+    var current;
 
     // DOM
     var $form             = $("form[name=new_meme]");
@@ -63,8 +64,22 @@ $(function() {
     var $hiddenForest     = $("#hidden-forest");
 
     var slide = function(step) {
+        current = step;
+
         var left = (step == 1) ? 0 : -300;
-        $(".step").animate({ left: left }, 300);
+        var aniCount = 0;
+
+        $(".step")
+            .stop()
+            .animate(
+                { left: left },
+                300,
+                null,
+                function() {
+                    if (++aniCount == 2)
+                        adjustHeight();
+                }
+            );
     };
 
     // Update image preview
@@ -85,6 +100,13 @@ $(function() {
                     $previewContainer.html($hiddenForest.html());
                     $hiddenForest.empty();
                 });
+        }
+    };
+
+    var adjustHeight = function() {
+        if (parent.parent.resizeTwdIframe) {
+            var height = (current == 1 ? $(".step1") : $(".step2")).height() + 10;
+            parent.parent.resizeTwdIframe(height);
         }
     };
 
