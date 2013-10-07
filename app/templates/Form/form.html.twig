@@ -97,6 +97,7 @@ $(function() {
             $("<img>", {width: 275})
                 .appendTo($hiddenForest)
                 .load(function() {
+                    console.log("Image loaded. Updating preview.");
                     $previewContainer.html($hiddenForest.html());
                     $hiddenForest.empty();
                 })
