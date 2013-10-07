@@ -7,6 +7,10 @@ class ImageTools
     const TEXT_TOP    = 'top';
     const TEXT_BOTTOM = 'bottom';
 
+    const FONT_PADDING  = 10;
+    const FONT_SIZE_MAX = 60;
+    const FONT_SIZE_MIN = 40;
+
     /**
      * Returns image width, height and type.
      *
@@ -150,8 +154,6 @@ class ImageTools
     public static function createMeme($bytes, $topText, $bottomText, $quality = 85)
     {
         $fontFile    = self::getFontFile();
-        $fontSize    = 51;
-        $fontPadding = 10;
 
         // All uppser case!
         $topText    = strtoupper($topText);
@@ -169,61 +171,103 @@ class ImageTools
 
         // Top text
         if ($topText) {
-            $text = $topText;
+            self::fitText($imageWidth, $topText, $textLines, $fontSize);
 
-            // Adjust font size to fint the width
-            while (--$fontSize > 35) {
-                list(
-                    $llx, $lly,
-                    $lrx, $lry,
-                    $urx, $ury,
-                    $ulx, $uly
-                ) = imagettfbbox($fontSize, 0, $fontFile, $text);
+            // Add lines
+            $offset = self::FONT_PADDING;
 
-                $textWidth  = abs($lrx - $llx);
-                $textHeight = abs($ury - $lry);
+            foreach ($textLines as $line) {
+                $textWidth  = self::getTextWidth($line, $fontSize);
+                $textHeight = self::getTextHeight($line, $fontSize);
 
-                if ($textWidth + $fontPadding * 2 < $imageWidth) {
+                // Don't use more than half the vertical space
+                if ($offset + $textHeight > $imageHeight / 2) {
                     break;
                 }
+
+                $textX = ($imageWidth - $textWidth - self::FONT_PADDING) / 2;
+                $textY = $textHeight + $offset;
+
+                self::addStrokedText($image, $fontSize, $textX, $textY, $line);
+
+                $offset += $textHeight + self::FONT_PADDING;
             }
-
-            // Calculate text offsets
-            $textX = ($imageWidth - $textWidth) / 2;
-            $textY = $textHeight + $fontPadding;
-
-            self::addStrokedText($image, $fontSize, $textX, $textY, $text);
         }
 
         // Bottom text
         if ($bottomText) {
-            $text = $bottomText;
+            self::fitText($imageWidth, $bottomText, $textLines, $fontSize);
 
-            // Adjust font size to fint the width
-            while (--$fontSize > 35) {
-                list(
-                    $llx, $lly,
-                    $lrx, $lry,
-                    $urx, $ury,
-                    $ulx, $uly
-                ) = imagettfbbox($fontSize, 0, $fontFile, $text);
+            // Calculate the text height to calculate the offset
+            $textHeight = self::getTextHeight($textLines[0], $fontSize);
+            $offset = $imageHeight - (self::FONT_PADDING + $textHeight) * count($textLines);
 
-                $textWidth  = abs($lrx - $llx);
-                $textHeight = abs($ury - $lry);
+            // Add lines
+            foreach ($textLines as $line) {
+                $textWidth  = self::getTextWidth($line, $fontSize);
 
-                if ($textWidth + $fontPadding * 2 < $imageWidth) {
-                    break;
-                }
+                $textX = ($imageWidth - $textWidth - self::FONT_PADDING) / 2;
+                $textY = $textHeight + $offset;
+
+                self::addStrokedText($image, $fontSize, $textX, $textY, $line);
+
+                $offset += $textHeight + self::FONT_PADDING;
             }
-
-            // Calculate text offsets
-            $textX = ($imageWidth - $textWidth) / 2;
-            $textY = $imageHeight - $fontPadding;
-
-            self::addStrokedText($image, $fontSize, $textX, $textY, $text);
         }
 
         return imagejpeg($image, null, $quality);
+    }
+
+    /**
+     * Breaks text into multiple lines
+     *
+     * @param int    $imageWidth
+     * @param string $text
+     * @param array  $textLines
+     * @param int    $fontSize
+     */
+    private static function fitText($imageWidth, $text, &$textLines, &$fontSize)
+    {
+        $textLines = [];
+        $fontSize = self::FONT_SIZE_MIN;
+
+        // Strategy 1. Reasonable user.
+        if (! self::textTooLong($text, $fontSize, $imageWidth)) {
+            $textLines = [ $text ];
+            $fontSize = self::FONT_SIZE_MIN;
+
+            while (
+                ! self::textTooLong($text, $fontSize + 1, $imageWidth) &&
+                $fontSize + 1 <= self::FONT_SIZE_MAX
+            ) {
+                $fontSize++;
+            }
+        }
+        // Strategy 2. Chatter.
+        else {
+            $words = str_word_count($text, 1, '\'!"-');
+            $buffer = [];
+
+            // Lets add the word and see if line's not too long
+            foreach ($words as $word) {
+                $buffer[] = $word;
+
+                // Measure the line
+                $lineStr = implode(' ', $buffer);
+
+                // Adding that word made the line too long?
+                if (self::textTooLong($lineStr, $fontSize, $imageWidth)) {
+                    array_pop($buffer);
+                    $textLines[] = implode(' ', $buffer);
+                    $buffer = [ $word ];
+                }
+            }
+
+            // Anything in the buffer?
+            if ($buffer) {
+                $textLines[] = implode(' ', $buffer);
+            }
+        }
     }
 
     /**
@@ -261,5 +305,59 @@ class ImageTools
     private static function getFontFile()
     {
         return APP_ROOT . '/app/fonts/Franchise-Bold-hinted.ttf';
+    }
+
+    /**
+     * Returns text width.
+     *
+     * @param string $text
+     * @param string $fontSize
+     *
+     * @return int
+     */
+    private static function getTextWidth($text, $fontSize)
+    {
+        list(
+            $llx, $lly,
+            $lrx, $lry,
+            $urx, $ury,
+            $ulx, $uly
+        ) = imagettfbbox($fontSize, 0, self::getFontFile(), $text);
+
+        return abs($lrx - $llx);
+    }
+
+    /**
+     * Returns text height.
+     *
+     * @param string $text
+     * @param string $fontSize
+     *
+     * @return int
+     */
+    private static function getTextHeight($text, $fontSize)
+    {
+        list(
+            $llx, $lly,
+            $lrx, $lry,
+            $urx, $ury,
+            $ulx, $uly
+        ) = imagettfbbox($fontSize, 0, self::getFontFile(), $text);
+
+        return abs($ury - $lry);
+    }
+
+    /**
+     * Returns true if text is too long for the given the font size and image width.
+     *
+     * @param string $text
+     * @param int    $fontSize
+     * @param int    $imageWidth
+     *
+     * @return bool
+     */
+    private static function textTooLong($text, $fontSize, $imageWidth)
+    {
+        return self::getTextWidth($text, $fontSize) > $imageWidth - 2 * self::FONT_PADDING;
     }
 }
