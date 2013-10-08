@@ -11,7 +11,6 @@ role :web,        "azureuser@pdx-www-1.cloudapp.net"
 set :repository,  "git@github.com:Parad0X/meme-generator.git"
 set :scm,         "git"
 set :branch,      "master"
-set :git_enable_submodules, 1
 
 # Deploy settings
 set :deploy_via,        :remote_cache
