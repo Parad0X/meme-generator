@@ -106,9 +106,9 @@ $(function() {
     };
 
     var adjustHeight = function() {
-        if (parent.parent.resizeTwdIframe) {
+        if (parent.resizeTwdIframe) {
             var height = (current == 1 ? $(".step1") : $(".step2")).height() + 10;
-            parent.parent.resizeTwdIframe(height);
+            parent.resizeTwdIframe(height);
         }
     };
 
