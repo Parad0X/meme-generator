@@ -234,7 +234,23 @@
 <p>
     <iframe src="/form" width="600" height="330" frameborder="0" scrolling="no" id="twd-iframe" seamless></iframe>
     <script type="text/javascript">
-    function resizeTwdIframe(height) { $("#twd-iframe").stop().animate({height: height}, 300); }
+    function resizeTwdIframe(height) {
+        $("#twd-iframe").stop().animate({height: height}, 300);
+    }
+    (function() {
+        function messageListener(event) {
+            if (event.origin.indexOf('themarysue.com') > -1 && event.data.height) {
+                $("#twd-iframe").stop().animate({height: event.data.height}, 300);
+            }
+        }
+        if (typeof(window.postMessage) != 'undefined') {
+            if (typeof(window.addEventListener) != 'undefined') {
+                window.addEventListener('message', messageListener);
+            } else {
+                window.attachEvent('onmessage', messageListener);
+            }
+        }
+    })();
     </script>
 </p>
 

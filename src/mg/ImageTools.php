@@ -4,9 +4,6 @@ namespace mg;
 
 class ImageTools
 {
-    const TEXT_TOP    = 'top';
-    const TEXT_BOTTOM = 'bottom';
-
     const FONT_PADDING  = 10;
     const FONT_SIZE_MAX = 60;
     const FONT_SIZE_MIN = 40;

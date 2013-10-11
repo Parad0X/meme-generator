@@ -106,9 +106,12 @@ $(function() {
     };
 
     var adjustHeight = function() {
-        if (parent.resizeTwdIframe) {
-            var height = (current == 1 ? $(".step1") : $(".step2")).height() + 10;
-            parent.resizeTwdIframe(height);
+        var height = (current == 1 ? $(".step1") : $(".step2")).height() + 10;
+
+        if (typeof(window.postMessage) != 'undefined') {
+            window.top.postMessage({height: height}, '*');
+        } else if (window.top.resizeTwdIframe) {
+            window.top.resizeTwdIframe(height);
         }
     };
 
