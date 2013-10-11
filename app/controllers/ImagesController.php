@@ -12,9 +12,18 @@ use mg\ImageTools;
  * @param string $id Image id
  */
 $app->get('/images/:id', function($id) use ($app) {
-    $adj    = $app->request->get('adj');
-    $width  = $app->request->get('width');
-    $height = $app->request->get('height');
+    list(
+        $id,
+        $width,
+        $height,
+        $adj
+    ) = explode('-', $id) + [null, null, null, null];
+
+    // We support both id-width-height-adj and id-width-adj
+    if (! is_numeric($height)) {
+        $adj = $height;
+        $height = null;
+    }
 
     $image = $app
         ->dm

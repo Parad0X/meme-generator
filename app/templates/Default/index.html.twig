@@ -1,24 +1,14 @@
-{% extends 'layout.html.twig' %}
+{% extends 'layout-tms.html.twig' %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="memes">
-                {% for meme in memes %}
-                    <div class="meme">
-                        <a href="/memes/{{ meme.id }}">
-                            <img src="/images/{{ meme.getImage.id }}" width="225">
-                        </a>
-                    </div>
-                {% else %}
-                    <div class="text-center">No memes has been aproved yet. Check back soon!</div>
-                {% endfor %}
+    <div class="memes">
+        {% for meme in memes %}
+            <div class="meme">
+                <a href="/memes/{{ meme.id }}"><img src="/images/{{ meme.getImage.id }}-220" width="200"></a>
             </div>
-        </div>
-
-        <div class="col-lg-4">
-            <iframe src="/form" width="300" height="330" frameborder="0" scrolling="no" id="twd-iframe" seamless></iframe>
-        </div>
+        {% else %}
+            <div class="text-center">No memes has been aproved yet. Check back soon!</div>
+        {% endfor %}
     </div>
 {% endblock %}
 
@@ -32,18 +22,10 @@
             $container.isotope({
                 resizable: false,
                 masonry : {
-                    columnWidth: $container.width() / 3
+                    columnWidth: ($container.width() - 30) / 4
                 }
             });
         });
         </script>
     {% endif %}
-
-    <script>
-    function resizeTwdIframe(height) {
-        $("#twd-iframe")
-            .stop()
-            .animate({height: height}, 200);
-    }
-    </script>
 {% endblock %}

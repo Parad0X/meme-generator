@@ -19,7 +19,7 @@
 
             <div class="meme-images">
                 {% for image in images %}
-                    {% set image_src = "/images/" ~ image.id ~ "?width=130&amp;height=130&amp;adj=crop" %}
+                    {% set image_src = "/images/" ~ image.id ~ "-130-130-crop" %}
                     <img src="{{ image_src|raw }}" data-id="{{ image.id }}" class="img-thumbnail">
                 {% endfor %}
             </div>

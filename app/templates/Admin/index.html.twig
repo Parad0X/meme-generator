@@ -20,7 +20,7 @@
             <h2>Images</h2>
             <div class="images text-center">
                 {% for image in images %}
-                    <img src="/images/{{ image.id }}?width=115&amp;height=115&amp;adj=crop" data-id="{{ image.id }}" class="img-thumbnail">
+                    <img src="/images/{{ image.id }}-115-115-crop" data-id="{{ image.id }}" class="img-thumbnail">
                 {% endfor %}
             </div>
 
@@ -100,8 +100,8 @@
 
             $(".meme-overlay")
                 .css({
-                    width      : meme.width() + "px",
-                    height     : meme.height() + "px",
+                    width      : (meme.width() + 2 * parseInt(meme.css("padding-left"))) + "px",
+                    height     : (meme.height() + 2 * parseInt(meme.css("padding-top"))) + "px",
                     left       : meme.offset().left + "px",
                     top        : meme.offset().top + "px",
                     paddingTop : ((meme.height() / 2) - 30) + "px"

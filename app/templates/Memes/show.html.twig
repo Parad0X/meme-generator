@@ -1,48 +1,64 @@
-{% extends 'layout.html.twig' %}
+{% extends 'layout-tms.html.twig' %}
 
 {% block content %}
     <div class="text-center">
         <img src="/images/{{ meme.getImage().id }}" label="{{ meme.textTop }}, {{ meme.textBottom }}">
-
-        <br><br>
-
-        <div class="fb-like" data-href="{{ meme.shareUrl }}" data-colorscheme="light" data-layout="box_count" data-action="like" data-show-faces="false" data-send="false"></div>
-        &nbsp;&nbsp;
-        <a href="https://twitter.com/share" class="twitter-share-button" data-url="{{ meme.shareUrl }}" data-lang="en" data-count="vertical">Tweet</a>
-        &nbsp;&nbsp;
-        <div class="g-plus" data-url="{{ meme.shareUrl }}" data-action="share" data-annotation="vertical-bubble" data-height="60"></div>
     </div>
 {% endblock %}
 
-{% block javascripts %}
-    <!-- Facebook -->
-    <script>
-    (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=137971133063113";
-    fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-    </script>
+{% block share_content %}
+    <div id="share">
+        <div class="share-twitter share-item">
+            <a href="http://twitter.com/share" class="twitter-share-button">&nbsp;</a>
+            <script type="text/javascript"><!--
+            $('a.twitter-share-button').attr({
+            'data-count':   'vertical',
+            'data-via':     'TheMarySue',
+            'data-url':     '{{ meme.shareUrl }}',
+            'data-text':    'Thor: The Dark World Featurette Establishes Brother/Brother Rivalry as Core to the Film',
+            'data-related': ['Mediaite', 'GossipCop', 'Styleite', 'Geekosystem', 'SportsGrid', 'TheJaneDough', 'TheBraiser'].join(',')
+            });
+            --></script>
+            <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+        </div>
 
-    <!-- Twitter -->
-    <script>
-    !function(d,s,id){
-    var js,fjs=d.getElementsByTagName(s)[0];
-    if(!d.getElementById(id)){
-    js=d.createElement(s);
-    js.id=id;
-    js.src="https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js,fjs);}}
-    (document,"script","twitter-wjs");
-    </script>
+        <div class="share-facebook share-item">
+            <iframe src="http://www.facebook.com/plugins/like.php?href={{ meme.shareUrl|url_encode }}&amp;layout=box_count&amp;show-faces=false&amp;action=like&amp;width=51&amp;font=arial&amp;colorscheme=light" scrolling="no" frameborder="0" id="facebook-like-inner"></iframe>
+        </div>
 
-    <script type="text/javascript">
-    (function() {
-    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://apis.google.com/js/plusone.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
-    </script>
+        <div class="share-plusone share-item">
+            <div class="g-plusone"></div>
+            <script type="text/javascript">
+            $('div.g-plusone').attr({
+            'data-size':  'tall',
+            'data-count': 'false'
+            });
+            (function() {
+            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+            po.src = 'https://apis.google.com/js/plusone.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+            })();
+            </script>
+        </div>
+
+        <div class="share-pinterest share-item" >
+            <a href="http://pinterest.com/pin/create/button/?url={{ meme.shareUrl|url_encode }}&amp;media=http://static03.mediaite.com/themarysue/uploads/2013/10/hqdefault5-300x225.jpg&amp;description=Thor%3A%20The%20Dark%20World%20Featurette%20Establishes%20Brother%2FBrother%20Rivalry%20as%20Core%20to%20the%20Film" class="pin-it-button" count-layout="vertical">
+                <img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" />
+            </a>
+        </div>
+
+        <div class="share-reddit share-item">
+            <script type="text/javascript">
+            reddit_url = "{{ meme.shareUrl }}";
+            reddit_title = "Thor: The Dark World Featurette Establishes Brother/Brother Rivalry as Core to the Film";
+            reddit_newwindow='1';
+            </script>
+            <script type="text/javascript" src="http://www.reddit.com/static/button/button3.js"></script>
+        </div>
+
+        <div class="share-tumblr share-item">
+            <script src="http://platform.tumblr.com/v1/share.js"></script>
+            <a href="http://www.tumblr.com/share" title="Share on Tumblr" style="display:inline-block; text-indent:-9999px; overflow:hidden; width:62px; height:20px; background:url('http://platform.tumblr.com/v1/share_2.png') top left no-repeat transparent;">Share on Tumblr</a>
+        </div>
+    </div>
 {% endblock %}
