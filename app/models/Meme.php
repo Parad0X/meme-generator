@@ -68,7 +68,7 @@ class Meme implements JsonSerializable
      */
     public function getShareUrl()
     {
-        return APP_URL . $this->id;
+        return APP_URL . '/memes/' . $this->id;
     }
 
     /**
