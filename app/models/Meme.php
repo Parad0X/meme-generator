@@ -78,7 +78,7 @@ class Meme implements JsonSerializable
      */
     public function getShareText()
     {
-        return 'GET YOUR MEME ON WITH SEASON FOUR OF THE WALKING DEAD';
+        return 'Get Your Meme On With Season Four Of The Walking Dead';
     }
 
     /**
