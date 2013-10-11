@@ -7,11 +7,9 @@ date_default_timezone_set('UTC');
  */
 define('APP_ROOT',        realpath(__DIR__ . '/..'));
 define('CACHE_DIR',       APP_ROOT . '/app/cache');
-define('APP_URL',         'http://memes.themarysue.com');
 define('SECURITY_TOKEN',  'a33350c7a5b59d7b1eb3aed7286948b2');
 define('SECURITY_COOKIE', 'twd-auth-cookie-poo');
 define('REVISION',        file_exists(APP_ROOT . '/REVISION') ? file_get_contents(APP_ROOT . '/REVISION') : time());
-define('CDN_URL',         'http://az509310.vo.msecnd.net');
 
 require APP_ROOT . '/vendor/autoload.php';
 
@@ -25,10 +23,16 @@ $app = new \Slim\Slim([
     ))
 ]);
 $app->configureMode('development', function() use ($app) {
+    define('APP_URL', '');
+    define('CDN_URL', '');
+
     $app->config('debug', true);
     $app->log->setLevel(\Slim\Log::DEBUG);
 });
 $app->configureMode('production', function() use ($app) {
+    define('APP_URL', 'http://memes.themarysue.com');
+    define('CDN_URL', 'http://az509310.vo.msecnd.net');
+
     $app->config('debug', false);
     $app->log->setLevel(\Slim\Log::ERROR);
 });

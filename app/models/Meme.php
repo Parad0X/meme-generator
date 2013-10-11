@@ -83,7 +83,7 @@ class Meme implements JsonSerializable
 
     public function getImageUrl()
     {
-        return '/images/' . $this->getImage()->id;
+        return APP_URL . '/images/' . $this->getImage()->id;
     }
 
     /**
