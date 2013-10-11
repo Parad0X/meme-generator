@@ -153,9 +153,9 @@ class ImageTools
      */
     public static function createMeme($bytes, $topText, $bottomText, $quality = 85)
     {
-        $fontFile    = self::getFontFile();
+        $fontFile = self::getFontFile();
 
-        // All uppser case!
+        // All upper case!
         $topText    = strtoupper($topText);
         $bottomText = strtoupper($bottomText);
 
@@ -245,7 +245,7 @@ class ImageTools
         }
         // Strategy 2. Chatter.
         else {
-            $words = str_word_count($text, 1, '\'!"-');
+            $words = str_word_count($text, 1, '\'"-.,;:!?@#$%^&*()_=');
             $buffer = [];
 
             // Lets add the word and see if line's not too long
