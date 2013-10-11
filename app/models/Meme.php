@@ -72,6 +72,16 @@ class Meme implements JsonSerializable
     }
 
     /**
+     * Returns text to share.
+     *
+     * @return string
+     */
+    public function getShareText()
+    {
+        return 'GET YOUR MEME ON WITH SEASON FOUR OF THE WALKING DEAD';
+    }
+
+    /**
      * JsonSerializable::jsonSerialize
      */
     public function jsonSerialize()

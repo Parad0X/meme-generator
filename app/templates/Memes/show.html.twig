@@ -15,7 +15,7 @@
             'data-count':   'vertical',
             'data-via':     'TheMarySue',
             'data-url':     '{{ meme.shareUrl }}',
-            'data-text':    'Thor: The Dark World Featurette Establishes Brother/Brother Rivalry as Core to the Film',
+            'data-text':    '{{ meme.shareText }}',
             'data-related': ['Mediaite', 'GossipCop', 'Styleite', 'Geekosystem', 'SportsGrid', 'TheJaneDough', 'TheBraiser'].join(',')
             });
             --></script>
@@ -30,19 +30,19 @@
             <div class="g-plusone"></div>
             <script type="text/javascript">
             $('div.g-plusone').attr({
-            'data-size':  'tall',
-            'data-count': 'false'
+                'data-size':  'tall',
+                'data-count': 'false'
             });
             (function() {
-            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-            po.src = 'https://apis.google.com/js/plusone.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                po.src = 'https://apis.google.com/js/plusone.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
             })();
             </script>
         </div>
 
         <div class="share-pinterest share-item" >
-            <a href="http://pinterest.com/pin/create/button/?url={{ meme.shareUrl|url_encode }}&amp;media=http://static03.mediaite.com/themarysue/uploads/2013/10/hqdefault5-300x225.jpg&amp;description=Thor%3A%20The%20Dark%20World%20Featurette%20Establishes%20Brother%2FBrother%20Rivalry%20as%20Core%20to%20the%20Film" class="pin-it-button" count-layout="vertical">
+            <a href="http://pinterest.com/pin/create/button/?url={{ meme.shareUrl|url_encode }}&amp;media=http://static03.mediaite.com/themarysue/uploads/2013/10/hqdefault5-300x225.jpg&amp;description={{ meme.shareText|url_encode }}" class="pin-it-button" count-layout="vertical">
                 <img border="0" src="//assets.pinterest.com/images/PinExt.png" title="Pin It" />
             </a>
         </div>
@@ -50,7 +50,7 @@
         <div class="share-reddit share-item">
             <script type="text/javascript">
             reddit_url = "{{ meme.shareUrl }}";
-            reddit_title = "Thor: The Dark World Featurette Establishes Brother/Brother Rivalry as Core to the Film";
+            reddit_title = "{{ meme.shareText }}";
             reddit_newwindow='1';
             </script>
             <script type="text/javascript" src="http://www.reddit.com/static/button/button3.js"></script>
