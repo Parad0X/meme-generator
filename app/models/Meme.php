@@ -81,6 +81,11 @@ class Meme implements JsonSerializable
         return 'Get Your Meme On With Season Four Of The Walking Dead';
     }
 
+    public function getImageUrl()
+    {
+        return '/images/' . $this->getImage()->id;
+    }
+
     /**
      * JsonSerializable::jsonSerialize
      */

@@ -1,8 +1,12 @@
 {% extends 'layout-tms.html.twig' %}
 
+{% block meta_tags %}
+    <meta property="og:image" content="{{ meme.imageUrl }}" />
+{% endblock %}
+
 {% block content %}
     <div class="text-center">
-        <img src="/images/{{ meme.getImage().id }}" label="{{ meme.textTop }}, {{ meme.textBottom }}">
+        <img src="{{ meme.imageUrl }}" label="{{ meme.textTop }}, {{ meme.textBottom }}">
     </div>
 {% endblock %}
 
