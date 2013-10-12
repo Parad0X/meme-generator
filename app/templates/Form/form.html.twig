@@ -34,7 +34,7 @@
             <form action="#" method="POST" name="new_meme">
                 <input type="hidden" name="image">
                 <input type="text" name="text_top" placeholder="Top Text" class="form-control">
-                <div class="step2-image-container"></div>
+                <div class="preview-container"></div>
                 <input type="text" name="text_bottom" placeholder="Bottom Text" class="form-control">
                 <button class="btn btn-primary">Create Meme</button>
             </form>
@@ -42,8 +42,6 @@
 
         <br clear="all">
     </div>
-
-    <div id="hidden-forest" style="display:none"></div>
 
     <!-- Preload step 2 images -->
     <div id="hidden-fortress" style="display:none">
@@ -54,6 +52,7 @@
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.0.4/jquery.imagesloaded.js"></script>
 
 <script>
 // New meme
@@ -63,11 +62,9 @@ $(function() {
     var current;
 
     // DOM
-    var $form             = $("form[name=new_meme]");
-    var $textTop          = $form.find("input[name=text_top]");
-    var $textBottom       = $form.find("input[name=text_bottom]");
-    var $previewContainer = $(".step2-image-container");
-    var $hiddenForest     = $("#hidden-forest");
+    var $form       = $("form[name=new_meme]");
+    var $textTop    = $form.find("input[name=text_top]");
+    var $textBottom = $form.find("input[name=text_bottom]");
 
     var slide = function(step) {
         current = step;
@@ -98,15 +95,24 @@ $(function() {
                 width       : 275
             });
 
-            $hiddenForest.empty();
+            // Kill all the other images being loaded
+            $('.preview-container.loading')
+                .unbind()
+                .remove();
 
-            $("<img>", {width: 275})
-                .appendTo($hiddenForest)
-                .load(function() {
-                    $previewContainer.html($hiddenForest.html());
-                    $hiddenForest.empty();
-                })
-                .attr("src", imageUrl);
+            // Load new preview image and update the preview div
+            $('<div class="preview-container loading"></div>')
+                .hide()
+                .appendTo($("body"))
+                .append($("<img>", { width: 275, src: imageUrl }))
+                .imagesLoaded()
+                .always(function(instance) {
+                    var container = $(instance.elements[0]);
+                    container
+                        .removeClass("loading")
+                        .show();
+                    $("form .preview-container").replaceWith(container);
+                });
         }
     };
 
