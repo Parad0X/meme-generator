@@ -32,7 +32,7 @@ $app->configureMode('development', function() use ($app) {
 });
 $app->configureMode('production', function() use ($app) {
     define('APP_URL', 'http://memes.themarysue.com');
-    define('CDN_URL', 'http://az509345.vo.msecnd.net/cdn');
+    define('CDN_URL', 'http://az509345.vo.msecnd.net');
 
     $app->config('debug', false);
     $app->log->setLevel(\Slim\Log::ERROR);
