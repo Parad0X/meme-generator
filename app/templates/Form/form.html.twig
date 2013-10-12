@@ -96,9 +96,7 @@ $(function() {
             });
 
             // Kill all the other images being loaded
-            $('.preview-container.loading')
-                .unbind()
-                .remove();
+            $('.preview-container.loading').remove();
 
             // Load new preview image and update the preview div
             $('<div class="preview-container loading"></div>')
@@ -108,9 +106,16 @@ $(function() {
                 .imagesLoaded()
                 .always(function(instance) {
                     var container = $(instance.elements[0]);
+
+                    // Ignore removed elements
+                    if (! container[0].parentNode) {
+                        return;
+                    }
+
                     container
                         .removeClass("loading")
                         .show();
+
                     $("form .preview-container").replaceWith(container);
                 });
         }
@@ -125,6 +130,15 @@ $(function() {
             window.top.resizeTwdIframe(height);
         }
     };
+
+    var delay = (function() {
+        var timer = 0;
+
+        return function(callback, ms) {
+            clearTimeout(timer);
+            timer = setTimeout(callback, ms);
+        };
+    })();
 
     // Back
     $(".back a").click(function() {
@@ -142,8 +156,8 @@ $(function() {
     });
 
     // Update preview on text change
-    $textTop.keyup(updatePreview);
-    $textBottom.keyup(updatePreview);
+    $textTop.keyup(function() { delay(updatePreview, 250) });
+    $textBottom.keyup(function() { delay(updatePreview, 250) });
 
     // Form submitted
     $form.submit(function(e) {
@@ -163,14 +177,14 @@ $(function() {
             if (response.redirect) {
                 window.top.location.href = response.redirect;
             } else {
-                alert("Oops. Something went wrong.");
+                alert("Oops. Something went wrong. Please reload the page and try again.");
             }
         })
         .error(function(response) {
             if (response.status == "error") {
                 alert(response.data);
             } else {
-                alert("Oops. Something went wrong.");
+                alert("Oops. Something went wrong. Please reload the page and try again.");
             }
         });
     });
