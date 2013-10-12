@@ -51,6 +51,31 @@ class Image implements JsonSerializable
     }
 
     /**
+     * Return's image url.
+     *
+     * @param string
+     *
+     */
+    public function getUrl($width = null, $height = null, $adj = null)
+    {
+        $url = '/images/' . $this->id;
+
+        if ($width) {
+            $url .= '-' . (int) $width;
+
+            if ($height) {
+                $url .= '-' . (int) $height;
+            }
+
+            if ($adj) {
+                $url .= '-' . $adj;
+            }
+        }
+
+        return $url;
+    }
+
+    /**
      * Returns file.
      *
      * @return Doctrine\MongoDB\GridFSFile

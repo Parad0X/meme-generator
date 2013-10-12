@@ -8,7 +8,7 @@
             <div class="memes">
                 {% for meme in memes %}
                     <div class="meme" data-id="{{ meme.id }}">
-                        <img src="/images/{{ meme.getImage.id }}" width="200">
+                        <img src="{{ meme.image.url(200) }}" width="200">
                     </div>
                 {% else %}
                     Nothing to moderate! Yay! Check back later though.
@@ -20,7 +20,7 @@
             <h2>Images</h2>
             <div class="images text-center">
                 {% for image in images %}
-                    <img src="/images/{{ image.id }}-115-115-crop" data-id="{{ image.id }}" class="img-thumbnail">
+                    <img src="{{ image.url(115, 115, 'crop') }}" data-id="{{ image.id }}" class="img-thumbnail">
                 {% endfor %}
             </div>
 

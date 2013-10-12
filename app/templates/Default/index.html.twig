@@ -8,7 +8,7 @@
     <div class="memes">
         {% for meme in memes %}
             <div class="meme">
-                <a href="/memes/{{ meme.id }}"><img src="/images/{{ meme.getImage.id }}-220" width="200"></a>
+                <a href="/memes/{{ meme.id }}"><img src="{{ meme.image.url(200) }}" width="200"></a>
             </div>
         {% else %}
             <div class="text-center">No memes has been aproved yet. Check back soon!</div>
