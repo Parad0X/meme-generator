@@ -10,6 +10,7 @@ define('CACHE_DIR',       APP_ROOT . '/app/cache');
 define('SECURITY_TOKEN',  'a33350c7a5b59d7b1eb3aed7286948b2');
 define('SECURITY_COOKIE', 'twd-auth-cookie-poo');
 define('REVISION',        file_exists(APP_ROOT . '/REVISION') ? file_get_contents(APP_ROOT . '/REVISION') : time());
+define('CDN_ENABLED',     false);
 
 require APP_ROOT . '/vendor/autoload.php';
 

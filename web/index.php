@@ -33,7 +33,11 @@ $app
     ->view
     ->getInstance()
     ->addFunction(new Twig_SimpleFunction('asset', function($url) {
-        return CDN_URL . $url;
+        if (CDN_ENABLED) {
+            return CDN_URL . $url;
+        } else {
+            return $url;
+        }
     }));
 
 // Secure
