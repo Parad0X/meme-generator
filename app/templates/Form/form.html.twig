@@ -44,6 +44,13 @@
     </div>
 
     <div id="hidden-forest" style="display:none"></div>
+
+    <!-- Preload step 2 images -->
+    <div id="hidden-fortress" style="display:none">
+        {% for image in images %}
+            <img src="/memes/preview?image={{ image.id }}&amp;text_top=&amp;text_bottom=&amp;width=275">
+        {% endfor %}
+    </div>
 </div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -96,7 +103,6 @@ $(function() {
             $("<img>", {width: 275})
                 .appendTo($hiddenForest)
                 .load(function() {
-                    console.log("Image loaded. Updating preview.");
                     $previewContainer.html($hiddenForest.html());
                     $hiddenForest.empty();
                 })
