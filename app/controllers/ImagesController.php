@@ -11,7 +11,7 @@ use mg\ImageTools;
  *
  * @param string $id Image id
  */
-$app->get('/images/:id', function($id) use ($app) {
+$showImage = function($id) use ($app) {
     list(
         $id,
         $width,
@@ -54,7 +54,9 @@ $app->get('/images/:id', function($id) use ($app) {
     } else {
         echo $bytes;
     }
-});
+};
+$app->get('/images/:id', $showImage);
+$app->get('/cdn/images/:id', $showImage);
 
 //********************************************* ADMINS *********************************************//
 

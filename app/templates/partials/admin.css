@@ -1,3 +1,8 @@
+<style>
+.main {
+    padding: 20px 0;
+}
+
 header {
     background-color: #000000;
     color: #FFFFFF;
@@ -26,10 +31,6 @@ footer {
 footer div {
     color: #635D38;
     line-height: 30px;
-}
-
-.main {
-    padding: 20px 0;
 }
 
 /**
@@ -126,3 +127,4 @@ div.meme-overlay .glyphicon.reject:hover {
        -o-transition-duration: 0s;
           transition-duration: 0s;
 }
+</style>

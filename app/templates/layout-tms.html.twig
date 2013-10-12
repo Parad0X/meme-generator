@@ -22,7 +22,7 @@
     <!-- Javascripts -->
     <script type='text/javascript' src='http://www.themarysue.com/wp-includes/js/l10n.js?ver=20101110'></script>
     <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
-    <script type='text/javascript' src="/assets/vendor/jquery/jquery.isotope.min.js"></script>
+    <script type='text/javascript' src="http://cdn.jsdelivr.net/isotope/1.5.25/jquery.isotope.min.js"></script>
     <script type='text/javascript' src="http://static03.mediaite.com/themarysue/themes/themarysue/js/scripts.js?v=4jzbtt"></script>
 
     <!-- Styleseets -->
@@ -30,7 +30,7 @@
     <link rel='stylesheet' id='am-ngg-css-css'  href='http://www.themarysue.com/wp-content/plugins/am-ngg-front-end/media/style.css?ver=2.2' type='text/css' media='all' />
     <link rel="stylesheet" type="text/css" href="http://static03.mediaite.com/themarysue/themes/themarysue/style.css?v=4ke3to" />
     <link rel="stylesheet" type="text/css" href="http://static03.mediaite.com/themarysue/themes/themarysue/images/fancybox/fancybox.css" />
-    <link href="/assets/css/style.css?{{ constant('REVISION') }}" rel="stylesheet">
+    {% include 'partials/style.css' %}
     {% block stylesheets %}{% endblock %}
 
 </head>

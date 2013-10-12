@@ -1,7 +1,7 @@
 <?php
 
 // Use built in error handler not in prod
-if ('production' == $app->getMode()) {
+if ('production' != $app->getMode()) {
     return;
 }
 

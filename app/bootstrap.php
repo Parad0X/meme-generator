@@ -23,15 +23,15 @@ $app = new \Slim\Slim([
     ))
 ]);
 $app->configureMode('development', function() use ($app) {
-    define('APP_URL', '');
-    define('CDN_URL', '');
+    define('APP_URL', 'http://localhost:8080');
+    define('CDN_URL', 'http://localhost:8080');
 
     $app->config('debug', true);
     $app->log->setLevel(\Slim\Log::DEBUG);
 });
 $app->configureMode('production', function() use ($app) {
     define('APP_URL', 'http://memes.themarysue.com');
-    define('CDN_URL', 'http://az509310.vo.msecnd.net/cdn');
+    define('CDN_URL', 'http://az509345.vo.msecnd.net/cdn');
 
     $app->config('debug', false);
     $app->log->setLevel(\Slim\Log::ERROR);

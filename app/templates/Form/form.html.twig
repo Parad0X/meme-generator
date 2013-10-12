@@ -7,7 +7,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/css/form.css?{{ constant('REVISION') }}" rel="stylesheet">
+    {% include "partials/form.css" %}
 </head>
 
 <body>
@@ -19,7 +19,7 @@
 
             <div class="meme-images">
                 {% for image in images %}
-                    <img src="{{ image.url(130, 130, 'crop') }}" data-id="{{ image.id }}" class="img-thumbnail">
+                    <img src="{{ asset(image.url(130, 130, 'crop')) }}" data-id="{{ image.id }}" class="img-thumbnail">
                 {% endfor %}
             </div>
         </div>

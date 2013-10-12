@@ -29,6 +29,12 @@ $app
         'autoescape'       => true
     ];
 $app->view->parserExtensions = array(new \Slim\Views\TwigExtension());
+$app
+    ->view
+    ->getInstance()
+    ->addFunction(new Twig_SimpleFunction('asset', function($url) {
+        return CDN_URL . $url;
+    }));
 
 // Secure
 $app->secured = function() use ($app) {
