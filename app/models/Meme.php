@@ -4,7 +4,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
  * @ODM\Document(collection="memes")
- * @ODM\Index(keys={"status":1,"uploadDate":-1})
+ * @ODM\Index(keys={"status":1,"created_at":-1})
  */
 class Meme implements JsonSerializable
 {
