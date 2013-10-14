@@ -1,5 +1,8 @@
 <?php
 
+use Alex\Pagination\Pager;
+use mg\Pagination\Adapter\MongoCursorAdapter;
+
 /**
  * AdminController.php
  */
@@ -43,6 +46,10 @@ if (! $app->secured) {
 }
 
 $app->get('/admin', function() use ($app) {
+    $page = (int) $app
+        ->request
+        ->get('page');
+
     // Original images
     $images = $app
         ->dm
@@ -56,15 +63,20 @@ $app->get('/admin', function() use ($app) {
         ->findBy(
             ['status' => Meme::STATUS_NEW],
             ['created_at' => 1]
-        )
-        ->limit(48);
+        );
+
+    // Pagination
+    $memes = (new Pager(new MongoCursorAdapter($memes)))
+        ->setPerPage(40)
+        ->setPage($page);
 
     // Render
     $app->render(
         'Admin/index.html.twig',
         [
             'images' => $images,
-            'memes'  => $memes
+            'memes'  => $memes,
+            'page'   => $page
         ]
     );
 });

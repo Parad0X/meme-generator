@@ -1,10 +1,14 @@
 {% extends 'layout.html.twig' %}
 
+{% set pld = memes.page == 1               ? 'class="disabled"' : '' %}
+{% set prd = memes.page == memes.pagecount ? 'class="disabled"' : '' %}
+
 {% block content %}
     <div class="row">
         <section class="col-lg-9">
             <h2>Moderation Queue</h2>
 
+            <!-- Memes -->
             <div class="memes">
                 {% for meme in memes %}
                     <div class="meme" data-id="{{ meme.id }}">
@@ -14,6 +18,24 @@
                     Nothing to moderate! Yay! Check back later though.
                 {% endfor %}
             </div>
+            <!-- / Memes -->
+
+            <!-- Pagination -->
+            {% if memes.pageCount > 0 %}
+                <div class="text-center">
+                    <ul class="pagination pagination-sm">
+                        <li {{ pld|raw }}><a href="?page=1">&laquo;</a></li>
+
+                        {% for i in 1..memes.pageCount %}
+                            {% set pa = (memes.page == i) ? 'class="active"' : '' %}
+                            <li {{ pa|raw }}><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endfor %}
+
+                        <li {{ prd|raw }}><a href="?page={{ memes.pageCount }}">&raquo;</a></li>
+                    </ul>
+                </div>
+            {% endif %}
+            <!-- / Pagination -->
         </section>
 
         <section class="col-lg-3 source-images">

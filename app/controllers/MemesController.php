@@ -5,6 +5,7 @@
  */
 
 use mg\ImageTools;
+use mg\MemeGenerator;
 
 /**
  * Create new meme.
@@ -41,7 +42,7 @@ $app->post('/memes', function() use ($app) {
 
     // Create meme image ...
     ob_start();
-        ImageTools::createMeme($image->file->getBytes(), $textTop, $textBottom);
+        MemeGenerator::createMeme($image->file->getBytes(), $textTop, $textBottom);
     $memeImageData = ob_get_clean();
 
     // ... store it in a temp file
@@ -129,7 +130,7 @@ $app->get('/memes/preview', function() use ($app) {
 
     if ($textTop || $textBottom) {
         ob_start();
-            ImageTools::createMeme($bytes, $textTop, $textBottom, 60);
+            MemeGenerator::createMeme($bytes, $textTop, $textBottom, 60);
         $bytes = ob_get_clean();
     } else {
         $app->lastModified($image->uploadDate->getTimestamp());

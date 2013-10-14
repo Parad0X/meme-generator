@@ -21,6 +21,7 @@
         "slim/views":  "0.*",
         "slim/extras": "2.*",
         "twig/twig":   "1.*",
-        "doctrine/mongodb-odm": "dev-master"
+        "doctrine/mongodb-odm": "dev-master",
+        "alexandresalome/pagination": "0.1.*"
     }
 }
